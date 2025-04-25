@@ -33,6 +33,8 @@ internal sealed class GitHubProject : Project
     public bool IsArchived { get; }
     public string Visibility { get; }
 
+    public string FullName => $"{RepoOwner}/{RepoName}";
+
     public override Task CloneAsync(FullPath clonePath, ProjectUpdaterOptions options, CancellationToken cancellationToken = default)
     {
         if (CloneUrl is null)

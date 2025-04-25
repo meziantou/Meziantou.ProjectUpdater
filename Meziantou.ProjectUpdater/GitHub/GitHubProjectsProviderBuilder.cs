@@ -1,5 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using CliWrap;
 using Meziantou.ProjectUpdater.GitHub.Client;
 
@@ -54,6 +56,50 @@ public sealed class GitHubProjectsProviderBuilder
         {
             var project = (GitHubProject)p;
             return project.RepoOwner != owner;
+        }));
+
+        return this;
+    }
+
+    public GitHubProjectsProviderBuilder ExcludeProjectsMatching(Regex regex)
+    {
+        _filters.Add(source => source.Where(p =>
+        {
+            var project = (GitHubProject)p;
+            return !regex.IsMatch(project.FullName);
+        }));
+
+        return this;
+    }
+
+    public GitHubProjectsProviderBuilder IncludeProjectsMatching(Regex regex)
+    {
+        _filters.Add(source => source.Where(p =>
+        {
+            var project = (GitHubProject)p;
+            return regex.IsMatch(project.FullName);
+        }));
+
+        return this;
+    }
+
+    public GitHubProjectsProviderBuilder ExcludeProjectsMatching([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options = RegexOptions.None)
+    {
+        _filters.Add(source => source.Where(p =>
+        {
+            var project = (GitHubProject)p;
+            return !Regex.IsMatch(project.FullName, pattern, options, Timeout.InfiniteTimeSpan);
+        }));
+
+        return this;
+    }
+
+    public GitHubProjectsProviderBuilder IncludeProjectsMatching([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options = RegexOptions.None)
+    {
+        _filters.Add(source => source.Where(p =>
+        {
+            var project = (GitHubProject)p;
+            return Regex.IsMatch(project.FullName, pattern, options, Timeout.InfiniteTimeSpan);
         }));
 
         return this;
