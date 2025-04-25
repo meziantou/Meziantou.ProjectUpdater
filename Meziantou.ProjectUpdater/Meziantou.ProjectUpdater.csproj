@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliWrap" Version="3.8.2" />
+    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.151">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Meziantou.Framework.Globbing" Version="1.0.15" />
+    <PackageReference Include="Meziantou.Framework.Http" Version="1.0.1" />
+    <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.5" />
+    <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+  </ItemGroup>
+
+</Project>
