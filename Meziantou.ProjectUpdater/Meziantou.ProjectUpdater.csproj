@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CliWrap" Version="3.8.2" />
-    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.151">
+    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.152">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

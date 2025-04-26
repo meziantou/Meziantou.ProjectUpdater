@@ -2,6 +2,11 @@ namespace Meziantou.ProjectUpdater;
 
 public sealed class ChangeDescription
 {
+    public ChangeDescription(string title)
+        : this(title, description: null)
+    {
+    }
+
     public ChangeDescription(string title, string? description)
     {
         ArgumentException.ThrowIfNullOrEmpty(title);

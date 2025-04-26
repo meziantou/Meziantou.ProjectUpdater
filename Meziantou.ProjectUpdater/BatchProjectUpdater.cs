@@ -60,10 +60,13 @@ public sealed partial class BatchProjectUpdater
             var temporaryDirectory = TemporaryDirectory.Create();
             try
             {
-                Log.CloningProject(logger, project.Id, project.Name);
-                await project.CloneAsync(temporaryDirectory.FullPath, options, cancellationToken).ConfigureAwait(false);
+                var localRepository = new LocalRepository(logger, temporaryDirectory, project, options, cancellationToken);
+                if (Updater.CloneProjectAutomatically)
+                {
+                    Log.CloningProject(logger, project.Id, project.Name);
+                    await project.CloneAsync(temporaryDirectory.FullPath, options, cancellationToken).ConfigureAwait(false);
+                }
 
-                var localRepository = new LocalRepository(temporaryDirectory);
                 var context = new ProjectUpdaterContext(logger, localRepository, project, options, cancellationToken);
 
                 Log.UpdatingProject(logger, project.Id, project.Name);
@@ -98,32 +101,5 @@ public sealed partial class BatchProjectUpdater
                 await temporaryDirectory.DisposeAsync().ConfigureAwait(false);
             }
         }).ConfigureAwait(false);
-    }
-
-    private static partial class Log
-    {
-        [LoggerMessage(Level = LogLevel.Information, Message = "Processing project '{ProjectId}' ({ProjectName})")]
-        public static partial void ProcessingProject(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is already processed")]
-        public static partial void ProjectAlreadyProcessed(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Cloning project '{ProjectId}' ({ProjectName})")]
-        public static partial void CloningProject(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Updating project '{ProjectId}' ({ProjectName})")]
-        public static partial void UpdatingProject(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Creating changelist for project '{ProjectId}' ({ProjectName})")]
-        public static partial void CreatingChangelist(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is completed. Changelist: {CommitId}; URL: {ReviewUrl}")]
-        public static partial void ProjectProcessed(ILogger logger, string projectId, string projectName, string commitId, Uri? reviewUrl);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is completed without changelist")]
-        public static partial void ProjectProcessedWithoutChanges(ILogger logger, string projectId, string projectName);
-
-        [LoggerMessage(Level = LogLevel.Error, Message = "Error while updating project '{ProjectId}' ({ProjectName}): {Message}")]
-        public static partial void ErrorWhileProcessingProject(ILogger logger, Exception exception, string projectId, string projectName, string message);
     }
 }
