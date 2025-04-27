@@ -11,6 +11,12 @@ var projects = new ProjectsProviderBuilder()
             .ExcludeArchivedProjects()
             .ExcludePrivateProjects()
             .ExcludeInternalProjects())
+        .AddAzureDevOps(builder => builder
+            .SetCollection(new("https://dev.azure.com/meziantou"))
+            .Authenticate("pat")
+            .AddAccessibleRepositories()
+            .ExcludeDisabledRepositories()
+            .ExcludeForks())
         .Build();
 
 await new BatchProjectUpdater
@@ -19,5 +25,9 @@ await new BatchProjectUpdater
     Projects = projects,
     Updater = new CreateCodeOwnersFileUpdater("@meziantou"),
     OpenReviewUrlInBrowser = true,
+    ProjectUpdaterOptions = new()
+    {
+        ForcePush = true,
+    },
 }
 .RunAsync();

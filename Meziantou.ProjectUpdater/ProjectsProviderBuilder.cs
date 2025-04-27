@@ -1,3 +1,4 @@
+using Meziantou.ProjectUpdater.AzureDevOps;
 using Meziantou.ProjectUpdater.GitHub;
 
 namespace Meziantou.ProjectUpdater;
@@ -9,6 +10,15 @@ public sealed class ProjectsProviderBuilder
     public ProjectsProviderBuilder AddGitHub(Action<GitHubProjectsProviderBuilder> builder)
     {
         var provider = new GitHubProjectsProviderBuilder();
+        builder?.Invoke(provider);
+        var result = provider.Build();
+        _providers.Add(result);
+        return this;
+    }
+  
+    public ProjectsProviderBuilder AddAzureDevOps(Action<AzureDevOpsProjectsProviderBuilder> builder)
+    {
+        var provider = new AzureDevOpsProjectsProviderBuilder();
         builder?.Invoke(provider);
         var result = provider.Build();
         _providers.Add(result);

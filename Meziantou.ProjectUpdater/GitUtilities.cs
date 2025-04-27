@@ -7,7 +7,7 @@ namespace Meziantou.ProjectUpdater;
 
 internal static class GitUtilities
 {
-    private static async Task<string> ExecuteGitCommand(FullPath path, ProjectUpdaterOptions options, string[] args, CancellationToken cancellationToken)
+    public static async Task<string> ExecuteGitCommand(FullPath path, ProjectUpdaterOptions options, string[] args, CancellationToken cancellationToken)
     {
         var arguments = new List<string>();
         foreach (var (key, value) in options.AdditionalGitConfigurations)

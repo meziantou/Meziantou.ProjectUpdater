@@ -17,6 +17,7 @@
     <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.5" />
     <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.13" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="19.225.1" />
   </ItemGroup>
 
 </Project>
