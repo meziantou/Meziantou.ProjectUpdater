@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 var serviceProvider = new ServiceCollection().AddLogging(builder => builder.AddConsole()).BuildServiceProvider();
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
-var projects = new ProjectsProviderBuilder()
+var projects = new ProjectsCollectionBuilder()
         .AddGitHub(builder => builder
             .AddUserProjects("meziantou")
             .ExcludeArchivedProjects()

@@ -3,11 +3,11 @@ using Meziantou.ProjectUpdater.GitHub;
 
 namespace Meziantou.ProjectUpdater;
 
-public sealed class ProjectsProviderBuilder
+public sealed class ProjectsCollectionBuilder
 {
     private readonly List<Func<IAsyncEnumerable<Project>>> _providers = [];
 
-    public ProjectsProviderBuilder AddGitHub(Action<GitHubProjectsProviderBuilder> builder)
+    public ProjectsCollectionBuilder AddGitHub(Action<GitHubProjectsProviderBuilder> builder)
     {
         var provider = new GitHubProjectsProviderBuilder();
         builder?.Invoke(provider);
@@ -16,7 +16,7 @@ public sealed class ProjectsProviderBuilder
         return this;
     }
   
-    public ProjectsProviderBuilder AddAzureDevOps(Action<AzureDevOpsProjectsProviderBuilder> builder)
+    public ProjectsCollectionBuilder AddAzureDevOps(Action<AzureDevOpsProjectsProviderBuilder> builder)
     {
         var provider = new AzureDevOpsProjectsProviderBuilder();
         builder?.Invoke(provider);
