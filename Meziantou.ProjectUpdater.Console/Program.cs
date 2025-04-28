@@ -13,7 +13,7 @@ var projects = new ProjectsProviderBuilder()
             .ExcludeInternalProjects())
         .AddAzureDevOps(builder => builder
             .SetCollection(new("https://dev.azure.com/meziantou"))
-            .Authenticate("pat")
+            .Authenticate("pat") // needs at least code:read-write
             .AddAccessibleRepositories()
             .ExcludeDisabledRepositories()
             .ExcludeForks())
