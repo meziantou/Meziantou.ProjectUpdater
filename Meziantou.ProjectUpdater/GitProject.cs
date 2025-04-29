@@ -2,9 +2,9 @@ using Meziantou.Framework;
 
 namespace Meziantou.ProjectUpdater;
 
-internal abstract class GitProjet : Project
+internal abstract class GitProject : Project
 {
-    protected GitProjet(string id, string name)
+    protected GitProject(string id, string name)
         : base(id, name)
     {
     }

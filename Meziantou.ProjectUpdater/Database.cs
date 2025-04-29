@@ -115,6 +115,19 @@ internal sealed partial class Database : IDisposable
         }
     }
 
+    public async Task<IReadOnlyCollection<string>> GetAllErrors()
+    {
+        await _lock.WaitAsync(_cancellationToken).ConfigureAwait(false);
+        try
+        {
+            return Projects.Select(p => p.ErrorMessage).Where(p => !string.IsNullOrEmpty(p)).ToArray()!;
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
     private sealed class UpdateStatusProject
     {
         public bool IsProject(Project project) => ProjectId == project.Id;

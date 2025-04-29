@@ -3,7 +3,7 @@ using Meziantou.ProjectUpdater.GitHub.Client;
 
 namespace Meziantou.ProjectUpdater.GitHub;
 
-internal sealed class GitHubProject : GitProjet
+internal sealed class GitHubProject : GitProject
 {
     private readonly GitHubClient _client;
 

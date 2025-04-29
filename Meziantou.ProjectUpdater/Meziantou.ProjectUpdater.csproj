@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Meziantou.ProjectUpdater.Tests"/>
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="CliWrap" Version="3.8.2" />
     <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.152">
       <PrivateAssets>all</PrivateAssets>

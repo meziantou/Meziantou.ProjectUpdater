@@ -4,7 +4,7 @@ using Microsoft.TeamFoundation.SourceControl.WebApi;
 
 namespace Meziantou.ProjectUpdater.AzureDevOps;
 
-internal sealed class AzureDevOpsGitProject : GitProjet
+internal sealed class AzureDevOpsGitProject : GitProject
 {
     private readonly GitHttpClient _client;
     private readonly string? _personalAccessToken;

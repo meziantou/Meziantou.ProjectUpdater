@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Meziantou.ProjectUpdater.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" Version="1.1.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="System.Memory.Data" Version="9.0.4" />
+    <PackageReference Include="xunit.v3" Version="2.0.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Meziantou.ProjectUpdater.Console\Meziantou.ProjectUpdater.Console.csproj" />
+    <ProjectReference Include="..\Meziantou.ProjectUpdater\Meziantou.ProjectUpdater.csproj" />
+  </ItemGroup>
+
+</Project>
