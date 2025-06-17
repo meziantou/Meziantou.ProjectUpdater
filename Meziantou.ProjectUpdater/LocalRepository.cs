@@ -28,23 +28,33 @@ public sealed class LocalRepository : IAsyncDisposable
         await _project.CloneAsync(_temporaryDirectory.FullPath, _options, _cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateFileAsync(string path, Func<byte[], byte[]> func)
+    public async Task<bool> UpdateFileAsync(string path, Func<byte[], byte[]> func)
     {
         var fullPath = GetFullPath(path);
         var bytes = await File.ReadAllBytesAsync(fullPath, _cancellationToken).ConfigureAwait(false);
         var newBytes = func(bytes);
         if (!bytes.SequenceEqual(newBytes))
+        {
             await File.WriteAllBytesAsync(fullPath, newBytes, _cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+
+        return false;
     }
 
-    public async Task UpdateFileAsync(string path, Func<string, string> func)
+    public async Task<bool> UpdateFileAsync(string path, Func<string, string> func)
     {
         var fullPath = GetFullPath(path);
         var encoding = await FileUtilities.GetEncodingAsync(fullPath, _cancellationToken).ConfigureAwait(false);
         var text = await File.ReadAllTextAsync(fullPath, encoding, _cancellationToken).ConfigureAwait(false);
         var newText = func(text);
         if (text != newText)
+        {
             await File.WriteAllTextAsync(fullPath, newText, encoding, _cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task AddFileAsync(string path, byte[] content)
