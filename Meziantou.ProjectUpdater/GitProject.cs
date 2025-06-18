@@ -21,8 +21,8 @@ internal abstract class GitProject : Project
 
     public override async Task<ChangelistInformation> CreateChangelistAsync(CreateChangelistRequest request)
     {
-        var currentBranchName = new BranchName(await GitUtilities.GetCurrentBranchNameAsync(request.Repository.RootPath, request.Options, request.CancellationToken).ConfigureAwait(false));
-        var branchName = request.ChangeDescription.BranchName ?? request.Options.BranchName?.Invoke(request) ?? currentBranchName;
+        var targetBranchName = new BranchName(await GitUtilities.GetCurrentBranchNameAsync(request.Repository.RootPath, request.Options, request.CancellationToken).ConfigureAwait(false));
+        var branchName = request.ChangeDescription.BranchName ?? request.Options.BranchName?.Invoke(request) ?? targetBranchName;
 
         var message = request.ChangeDescription.Title;
         if (!string.IsNullOrEmpty(request.ChangeDescription.Description))
@@ -32,8 +32,8 @@ internal abstract class GitProject : Project
         await GitUtilities.PushAsync(request.Repository.RootPath, request.Options, branch: branchName.Name, force: request.Options.ForcePush, cancellationToken: request.CancellationToken).ConfigureAwait(false);
 
         Uri? pullRequestUrl = null;
-        if (currentBranchName != branchName)
-            pullRequestUrl = await CreatePullRequestAsync(request, currentBranchName, branchName, request.CancellationToken).ConfigureAwait(false);
+        if (targetBranchName != branchName)
+            pullRequestUrl = await CreatePullRequestAsync(request, branchName, targetBranchName, request.CancellationToken).ConfigureAwait(false);
 
         var result = new ChangelistInformation(commitId, pullRequestUrl);
         return result;
