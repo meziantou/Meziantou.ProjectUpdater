@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Meziantou.ProjectUpdater.Console/Meziantou.ProjectUpdater.Console.csproj" />
+  <Project Path="Meziantou.ProjectUpdater.Tests/Meziantou.ProjectUpdater.Tests.csproj" />
+  <Project Path="Meziantou.ProjectUpdater/Meziantou.ProjectUpdater.csproj" />
+</Solution>
