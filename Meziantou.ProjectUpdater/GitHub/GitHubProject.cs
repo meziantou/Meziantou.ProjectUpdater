@@ -8,11 +8,11 @@ internal sealed class GitHubProject : GitProject
     private readonly GitHubClient _client;
 
     public GitHubProject(GitHubClient client, GitHubMinimalRepository repo)
-        : this(client, repo.Id, repo.Owner?.Login!, repo.Name!, repo.CloneUrl!, repo.Archived, repo.Visibility!)
+        : this(client, repo.Id, repo.Owner?.Login!, repo.Name!, repo.CloneUrl!, repo.Archived, repo.Visibility!, repo.Fork)
     {
     }
 
-    public GitHubProject(GitHubClient client, long id, string owner, string name, string cloneUrl, bool isArchived, string visibility)
+    public GitHubProject(GitHubClient client, long id, string owner, string name, string cloneUrl, bool isArchived, string visibility, bool fork)
         : base(string.Create(CultureInfo.InvariantCulture, $"github:{id}"), $"{owner}/{name}")
     {
         ArgumentNullException.ThrowIfNull(cloneUrl);
@@ -25,6 +25,7 @@ internal sealed class GitHubProject : GitProject
         CloneUrl = cloneUrl;
         IsArchived = isArchived;
         Visibility = visibility;
+        IsFork = fork;
     }
 
     public string RepoOwner { get; }
@@ -32,6 +33,7 @@ internal sealed class GitHubProject : GitProject
     public override string CloneUrl { get; }
     public bool IsArchived { get; }
     public string Visibility { get; }
+    public bool IsFork { get; }
 
     public string FullName => $"{RepoOwner}/{RepoName}";
 

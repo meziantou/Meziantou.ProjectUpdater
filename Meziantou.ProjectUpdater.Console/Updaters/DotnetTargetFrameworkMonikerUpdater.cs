@@ -4,7 +4,7 @@ using NuGet.Frameworks;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
-namespace Meziantou.ProjectUpdater.Console;
+namespace Meziantou.ProjectUpdater.Console.Updaters;
 
 /// <param name="channel">e.g. 9.0, 10.0</param>
 internal sealed class DotnetTargetFrameworkMonikerUpdater(string channel) : IProjectUpdater

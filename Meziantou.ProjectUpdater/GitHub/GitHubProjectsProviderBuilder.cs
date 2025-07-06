@@ -14,6 +14,7 @@ public sealed class GitHubProjectsProviderBuilder
     private readonly List<Func<IAsyncEnumerable<Project>, IAsyncEnumerable<Project>>> _filters = [];
     private readonly HashSet<string> _excludedVisibilities = [];
     private bool _includeArchived = true;
+    private bool _includeForks = true;
 
     public GitHubProjectsProviderBuilder Authenticate(string? token)
     {
@@ -121,6 +122,12 @@ public sealed class GitHubProjectsProviderBuilder
         return this;
     }
 
+    public GitHubProjectsProviderBuilder ExcludeForks()
+    {
+        _includeForks = false;
+        return this;
+    }
+
     internal Func<IAsyncEnumerable<Project>> Build()
     {
         return () =>
@@ -129,6 +136,9 @@ public sealed class GitHubProjectsProviderBuilder
 
             if (!_includeArchived)
                 result = result.Where(p => !((GitHubProject)p).IsArchived);
+
+            if (!_includeForks)
+                result = result.Where(p => !((GitHubProject)p).IsFork);
 
             if (_excludedVisibilities.Count > 0)
                 result = result.Where(p => !_excludedVisibilities.Contains(((GitHubProject)p).Visibility));

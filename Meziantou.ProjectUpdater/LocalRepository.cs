@@ -77,7 +77,7 @@ public sealed class LocalRepository : IAsyncDisposable
     public IEnumerable<FullPath> FindFile(string globPattern, GlobOptions options = GlobOptions.None)
     {
         var glob = Glob.Parse(globPattern, options);
-        return glob.EnumerateFiles(RootPath).Select(FullPath.FromPath);
+        return glob.EnumerateFiles(RootPath).Select(FullPath.FromPath).Where(IncludeFile);
     }
 
     private FullPath GetFullPath(string path)
@@ -88,4 +88,12 @@ public sealed class LocalRepository : IAsyncDisposable
     public FullPath RootPath => _temporaryDirectory.FullPath;
 
     public ValueTask DisposeAsync() => _temporaryDirectory.DisposeAsync();
+
+    private bool IncludeFile(FullPath path)
+    {
+        var gitPath = RootPath / ".git";
+        return !path.IsChildOf(gitPath);
+    }
+
+    public override string ToString() => "Repo: " + _project.Name;
 }
