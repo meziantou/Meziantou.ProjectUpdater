@@ -19,8 +19,8 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Information, Message = "Creating changelist for project '{ProjectId}' ({ProjectName})")]
     public static partial void CreatingChangelist(ILogger logger, string projectId, string projectName);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is completed. Changelist: {CommitId}; URL: {ReviewUrl}")]
-    public static partial void ProjectProcessed(ILogger logger, string projectId, string projectName, string commitId, Uri? reviewUrl);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is completed. Changelist: {CommitId}; BranchName: {BranchName}; URL: {ReviewUrl}")]
+    public static partial void ProjectProcessed(ILogger logger, string projectId, string projectName, string commitId, string branchName, Uri? reviewUrl);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Project '{ProjectId}' ({ProjectName}) is completed without changelist")]
     public static partial void ProjectProcessedWithoutChanges(ILogger logger, string projectId, string projectName);

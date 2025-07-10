@@ -1,4 +1,5 @@
 using Meziantou.ProjectUpdater;
+using Meziantou.ProjectUpdater.Console.Updaters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -28,6 +29,7 @@ await new BatchProjectUpdater
     ProjectUpdaterOptions = new()
     {
         ForcePush = true,
+        //BranchName = _ => new BranchName("feature/"),
     },
 }
 .RunAsync();

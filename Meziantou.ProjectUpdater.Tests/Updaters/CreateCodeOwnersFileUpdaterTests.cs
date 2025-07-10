@@ -1,4 +1,4 @@
-namespace Meziantou.ProjectUpdater.Tests;
+namespace Meziantou.ProjectUpdater.Tests.Updaters;
 
 public class CreateCodeOwnersFileUpdaterTests
 {

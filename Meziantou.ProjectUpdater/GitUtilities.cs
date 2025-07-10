@@ -56,10 +56,10 @@ internal static class GitUtilities
         return commitId.TrimEnd('\n');
     }
 
-    public static Task PushAsync(FullPath repositoryPath, ProjectUpdaterOptions options, string branch, bool force, CancellationToken cancellationToken)
+    public static Task PushAsync(FullPath repositoryPath, ProjectUpdaterOptions options, string remoteBranchName, bool force, CancellationToken cancellationToken)
     {
         var additionalArgs = force ? ["--force"] : Array.Empty<string>();
-        return ExecuteGitCommand(repositoryPath, options, ["push", "origin", "HEAD:" + branch, .. additionalArgs], cancellationToken);
+        return ExecuteGitCommand(repositoryPath, options, ["push", "origin", "HEAD:" + remoteBranchName, .. additionalArgs], cancellationToken);
     }
 
     public static async Task<string> GetCurrentBranchNameAsync(FullPath repositoryPath, ProjectUpdaterOptions options, CancellationToken cancellationToken)

@@ -29,13 +29,15 @@ internal abstract class GitProject : Project
             message = message + "\n\n" + request.ChangeDescription.Description;
 
         var commitId = await GitUtilities.CommitAsync(request.Repository.RootPath, request.Options, message, request.CancellationToken).ConfigureAwait(false);
-        await GitUtilities.PushAsync(request.Repository.RootPath, request.Options, branch: branchName.Name, force: request.Options.ForcePush, cancellationToken: request.CancellationToken).ConfigureAwait(false);
+        await GitUtilities.PushAsync(request.Repository.RootPath, request.Options, remoteBranchName: branchName.Name, force: request.Options.ForcePush, cancellationToken: request.CancellationToken).ConfigureAwait(false);
 
         Uri? pullRequestUrl = null;
         if (targetBranchName != branchName)
+        {
             pullRequestUrl = await CreatePullRequestAsync(request, branchName, targetBranchName, request.CancellationToken).ConfigureAwait(false);
+        }
 
-        var result = new ChangelistInformation(commitId, pullRequestUrl);
+        var result = new ChangelistInformation(commitId, branchName.Name, pullRequestUrl);
         return result;
 
     }

@@ -77,7 +77,7 @@ public sealed partial class BatchProjectUpdater
                     var changelist = await project.CreateChangelistAsync(new(localRepository, options, changeDescription, cancellationToken)).ConfigureAwait(false);
 
                     await database.UpdateProject(project, changelist, exception: null).ConfigureAwait(false);
-                    Log.ProjectProcessed(logger, project.Id, project.Name, changelist.CommitId, changelist.ReviewUrl);
+                    Log.ProjectProcessed(logger, project.Id, project.Name, changelist.CommitId, changelist.BranchName, changelist.ReviewUrl);
 
                     if (OpenReviewUrlInBrowser && changelist.ReviewUrl is not null)
                     {
