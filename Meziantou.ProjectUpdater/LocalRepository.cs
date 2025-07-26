@@ -57,6 +57,54 @@ public sealed class LocalRepository : IAsyncDisposable
         return false;
     }
 
+    public async Task<bool> AddOrUpdateFileAsync(string path, Func<byte[]?, byte[]> func)
+    {
+        var fullPath = GetFullPath(path);
+        if (File.Exists(fullPath))
+        {
+            var bytes = await File.ReadAllBytesAsync(fullPath, _cancellationToken).ConfigureAwait(false);
+            var newBytes = func(bytes);
+            if (!bytes.SequenceEqual(newBytes))
+            {
+                await File.WriteAllBytesAsync(fullPath, newBytes, _cancellationToken).ConfigureAwait(false);
+                return true;
+            }
+
+            return false;
+        }
+        else
+        {
+            var newBytes = func(null);
+            await File.WriteAllBytesAsync(fullPath, newBytes, _cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+    }
+
+    public async Task<bool> AddOrUpdateFileAsync(string path, Func<string?, string> func)
+    {
+        var fullPath = GetFullPath(path);
+        if (File.Exists(fullPath))
+        {
+            var encoding = await FileUtilities.GetEncodingAsync(fullPath, _cancellationToken).ConfigureAwait(false);
+            var text = await File.ReadAllTextAsync(fullPath, encoding, _cancellationToken).ConfigureAwait(false);
+            var newText = func(text);
+            if (text != newText)
+            {
+                await File.WriteAllTextAsync(fullPath, newText, encoding, _cancellationToken).ConfigureAwait(false);
+                return true;
+            }
+
+            return false;
+        }
+        else
+        {
+            var newText = func(null);
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            await File.WriteAllTextAsync(fullPath, newText, encoding, _cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+    }
+
     public async Task AddFileAsync(string path, byte[] content)
     {
         var fullPath = GetFullPath(path);

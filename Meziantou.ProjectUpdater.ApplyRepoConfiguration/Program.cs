@@ -9,7 +9,6 @@ var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 var projects = new ProjectsCollectionBuilder()
         .AddGitHub(builder => builder
             .AddUserProjects("meziantou")
-            //.AddOrganizationProjects("sample-org")
             .ExcludeArchivedProjects()
             .ExcludePrivateProjects()
             .ExcludeInternalProjects()
@@ -20,16 +19,15 @@ await new BatchProjectUpdater
 {
     Logger = logger,
     Projects = projects,
-    Updater = new CreateCodeOwnersFileUpdater("meziantou"),
+    Updater = new ApplyRepositoryConfiguration(),
     OpenReviewUrlInBrowser = true,
     BatchOptions = new()
     {
-        // MaximumProjects = 1,
+        DegreeOfParallelism = 4,
     },
     ProjectUpdaterOptions = new()
     {
         ForcePush = true,
-        //BranchName = _ => new BranchName("feature/"),
     },
 }
 .RunAsync();

@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Meziantou.ProjectUpdater.ApplyRepoConfiguration/Meziantou.ProjectUpdater.ApplyRepoConfiguration.csproj" Id="4adb1457-1110-426d-b696-a0466e7e233b" />
   <Project Path="Meziantou.ProjectUpdater.Console/Meziantou.ProjectUpdater.Console.csproj" />
   <Project Path="Meziantou.ProjectUpdater.Tests/Meziantou.ProjectUpdater.Tests.csproj" />
   <Project Path="Meziantou.ProjectUpdater/Meziantou.ProjectUpdater.csproj" />
