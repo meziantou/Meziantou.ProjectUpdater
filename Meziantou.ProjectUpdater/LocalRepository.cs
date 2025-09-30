@@ -57,13 +57,19 @@ public sealed class LocalRepository : IAsyncDisposable
         return false;
     }
 
-    public async Task<bool> AddOrUpdateFileAsync(string path, Func<byte[]?, byte[]> func)
+    public async Task<bool> AddOrUpdateFileAsync(string path, Func<byte[]?, byte[]?> func)
     {
         var fullPath = GetFullPath(path);
         if (File.Exists(fullPath))
         {
             var bytes = await File.ReadAllBytesAsync(fullPath, _cancellationToken).ConfigureAwait(false);
             var newBytes = func(bytes);
+            if (newBytes is null)
+            {
+                File.Delete(fullPath);
+                return true;
+            }
+
             if (!bytes.SequenceEqual(newBytes))
             {
                 await File.WriteAllBytesAsync(fullPath, newBytes, _cancellationToken).ConfigureAwait(false);
@@ -75,12 +81,15 @@ public sealed class LocalRepository : IAsyncDisposable
         else
         {
             var newBytes = func(null);
+            if (newBytes is null)
+                return false;
+
             await File.WriteAllBytesAsync(fullPath, newBytes, _cancellationToken).ConfigureAwait(false);
             return true;
         }
     }
 
-    public async Task<bool> AddOrUpdateFileAsync(string path, Func<string?, string> func)
+    public async Task<bool> AddOrUpdateFileAsync(string path, Func<string?, string?> func)
     {
         var fullPath = GetFullPath(path);
         if (File.Exists(fullPath))
@@ -88,6 +97,12 @@ public sealed class LocalRepository : IAsyncDisposable
             var encoding = await FileUtilities.GetEncodingAsync(fullPath, _cancellationToken).ConfigureAwait(false);
             var text = await File.ReadAllTextAsync(fullPath, encoding, _cancellationToken).ConfigureAwait(false);
             var newText = func(text);
+            if (newText is null)
+            {
+                File.Delete(fullPath);
+                return true;
+            }
+
             if (text != newText)
             {
                 await File.WriteAllTextAsync(fullPath, newText, encoding, _cancellationToken).ConfigureAwait(false);
@@ -99,6 +114,9 @@ public sealed class LocalRepository : IAsyncDisposable
         else
         {
             var newText = func(null);
+            if (newText is null)
+                return false;
+
             var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             await File.WriteAllTextAsync(fullPath, newText, encoding, _cancellationToken).ConfigureAwait(false);
             return true;
