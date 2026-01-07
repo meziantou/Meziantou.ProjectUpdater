@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Meziantou.Framework" Version="4.4.6" />
-    <PackageReference Include="Meziantou.Framework.CommandLine" Version="3.0.4" />
-    <PackageReference Include="Meziantou.Framework.DependencyScanning" Version="1.3.0" />
+    <PackageReference Include="Meziantou.Framework" Version="5.0.9" />
+    <PackageReference Include="Meziantou.Framework.CommandLine" Version="3.0.8" />
+    <PackageReference Include="Meziantou.Framework.DependencyScanning" Version="2.0.5" />
     <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
-    <PackageReference Include="NuGet.Protocol" Version="6.14.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
+    <PackageReference Include="NuGet.Protocol" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

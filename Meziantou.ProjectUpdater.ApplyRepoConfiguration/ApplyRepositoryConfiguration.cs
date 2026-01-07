@@ -150,6 +150,7 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
             SOFTWARE.
             """);
 
+        DeleteFile(repo, "LICENSE");
         DeleteFile(repo, "LICENSE.md");
     }
 
@@ -169,7 +170,7 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
                   issues: write
                   pull-requests: write
                 steps:
-                  - uses: actions/stale@v9
+                  - uses: actions/stale@v10
                     with:
                       days-before-issue-stale: 60
                       days-before-issue-close: 14
@@ -180,6 +181,8 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
                       days-before-pr-close: 60
                       stale-pr-message: "This pull request is stale because it has been open for 60 days with no activity."
                       close-pr-message: "This pull request was closed because it has been inactive for 14 days since being marked as stale."
+                      exempt-issue-labels: "not-stale,need-help"
+                      exempt-pr-labels: "not-stale,need-help"
                       repo-token: ${{ secrets.GITHUB_TOKEN }}
             """);
     }
@@ -199,7 +202,7 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
             }
 
             return $$"""
-                # reference:https://raw.githubusercontent.com/meziantou/Meziantou.DotNet.CodingStandard/refs/heads/main/.editorconfig
+                # reference:https://raw.githubusercontent.com/meziantou/Meziantou.Net.Sdk/refs/heads/main/.editorconfig
                 # endreference
 
                 {{suffix}}
@@ -216,6 +219,5 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
         catch (FileNotFoundException)
         {
         }
-
     }
 }

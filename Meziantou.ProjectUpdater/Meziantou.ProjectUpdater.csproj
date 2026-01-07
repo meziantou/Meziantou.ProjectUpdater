@@ -11,17 +11,17 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="CliWrap" Version="3.9.0" />
-    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.172">
+    <PackageReference Include="CliWrap" Version="3.10.0" />
+    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.181">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Meziantou.Framework.Globbing" Version="1.0.16" />
-    <PackageReference Include="Meziantou.Framework.Http" Version="1.0.1" />
-    <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.5" />
-    <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.16" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
-    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="19.225.1" />
+    <PackageReference Include="Meziantou.Framework.Globbing" Version="2.0.2" />
+    <PackageReference Include="Meziantou.Framework.Http" Version="1.0.5" />
+    <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.8" />
+    <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.30" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="19.225.2" />
   </ItemGroup>
 
 </Project>
