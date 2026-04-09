@@ -1,5 +1,4 @@
 using System.Text;
-using CliWrap;
 using Meziantou.Framework;
 using Meziantou.ProjectUpdater.GitHub;
 
@@ -27,12 +26,13 @@ internal static class GitUtilities
         var logs = new StringBuilder();
         try
         {
-            await Cli.Wrap("git")
+            using var process = ProcessWrapper.Create("git")
                 .WithArguments(arguments)
-                .WithStandardOutputPipe(PipeTarget.ToStringBuilder(logs))
-                .WithStandardErrorPipe(PipeTarget.ToStringBuilder(logs))
-                .ExecuteAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .WithOutputStream(logs)
+                .AddErrorStream(logs)
+                .ExecuteAsync(cancellationToken);
+
+            await process;
         }
         catch (Exception ex)
         {

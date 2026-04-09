@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using CliWrap;
+using Meziantou.Framework;
 using Meziantou.ProjectUpdater.GitHub.Client;
 
 namespace Meziantou.ProjectUpdater.GitHub;
@@ -199,12 +199,13 @@ public sealed class GitHubProjectsProviderBuilder
             try
             {
                 var sb = new StringBuilder();
-                await Cli.Wrap("gh")
+                using var process = ProcessWrapper.Create("gh")
                     .WithArguments(["auth", "token"])
-                    .WithStandardOutputPipe(PipeTarget.ToStringBuilder(sb))
-                    .WithStandardErrorPipe(PipeTarget.ToStringBuilder(sb))
-                    .ExecuteAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                    .WithOutputStream(sb)
+                    .AddErrorStream(sb)
+                    .ExecuteAsync(cancellationToken);
+
+                await process;
 
                 token = sb.ToString().Trim(' ', '\r', '\n');
             }

@@ -1,5 +1,5 @@
+using System.Diagnostics;
 using System.Text;
-using CliWrap;
 using Meziantou.Framework;
 
 namespace Meziantou.ProjectUpdater.Tests;
@@ -81,30 +81,13 @@ internal sealed class GitRepository : IAsyncDisposable
 
     public async Task<byte[]> GetFileContent(string @ref, string path)
     {
-        using var ms = new MemoryStream();
-        var args = GetCommandArguments(["show", @ref + ":" + path]);
-        var result = await Cli.Wrap("git")
-           .WithArguments(args)
-           .WithStandardOutputPipe(PipeTarget.ToStream(ms))
-           .WithStandardErrorPipe(PipeTarget.ToStream(ms))
-           .ExecuteAsync(_cancellationToken);
-
-        return ms.ToArray();
+        return await ExecuteGitCommandAndCaptureOutput(["show", @ref + ":" + path]).ConfigureAwait(false);
     }
 
     public async Task<string> GetFileContentAsString(string @ref, string path, Encoding? encoding = null)
     {
-        using var ms = new MemoryStream();
-        var args = GetCommandArguments(["show", @ref + ":" + path]);
-        var result = await Cli.Wrap("git")
-           .WithArguments(args)
-           .WithStandardOutputPipe(PipeTarget.ToStream(ms))
-           .WithStandardErrorPipe(PipeTarget.ToStream(ms))
-           .ExecuteAsync(_cancellationToken);
-
-        ms.Seek(0, SeekOrigin.Begin);
-        using var sr = new StreamReader(ms, encoding);
-        return sr.ReadToEnd();
+        var bytes = await ExecuteGitCommandAndCaptureOutput(["show", @ref + ":" + path]).ConfigureAwait(false);
+        return (encoding ?? Encoding.UTF8).GetString(bytes);
     }
 
     private List<string> GetCommandArguments(IEnumerable<string?> args)
@@ -133,13 +116,56 @@ internal sealed class GitRepository : IAsyncDisposable
 
     private async Task<int> ExecuteGitCommand(IEnumerable<string?> arguments, bool checkExitCode)
     {
-        var result = await Cli.Wrap("git")
+        var validationMode = checkExitCode ? ProcessValidationMode.FailIfNonZeroExitCode : ProcessValidationMode.None;
+        using var process = ProcessWrapper.Create("git")
             .WithArguments(GetCommandArguments(arguments))
-            .WithStandardOutputPipe(PipeTarget.ToDelegate(_testOutputHelper.WriteLine))
-            .WithStandardErrorPipe(PipeTarget.ToDelegate(_testOutputHelper.WriteLine))
-            .WithValidation(checkExitCode ? CommandResultValidation.ZeroExitCode : CommandResultValidation.None)
+            .WithOutputStream(_testOutputHelper.WriteLine)
+            .AddErrorStream(_testOutputHelper.WriteLine)
+            .WithValidation(validationMode)
             .ExecuteAsync(_cancellationToken);
 
-        return result.ExitCode;
+        return await process;
+    }
+
+    private async Task<byte[]> ExecuteGitCommandAndCaptureOutput(IEnumerable<string?> arguments)
+    {
+        using var standardOutput = new MemoryStream();
+        using var standardError = new MemoryStream();
+
+        var processStartInfo = new ProcessStartInfo("git")
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        };
+
+        foreach (var argument in GetCommandArguments(arguments))
+        {
+            processStartInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = new Process
+        {
+            StartInfo = processStartInfo,
+        };
+
+        process.Start();
+
+        var copyStandardOutputTask = process.StandardOutput.BaseStream.CopyToAsync(standardOutput, _cancellationToken);
+        var copyStandardErrorTask = process.StandardError.BaseStream.CopyToAsync(standardError, _cancellationToken);
+        var waitForExitTask = process.WaitForExitAsync(_cancellationToken);
+
+        await Task.WhenAll(copyStandardOutputTask, copyStandardErrorTask, waitForExitTask).ConfigureAwait(false);
+
+        if (process.ExitCode != 0)
+        {
+            var stderr = Encoding.UTF8.GetString(standardError.ToArray());
+            throw new InvalidOperationException($"git command failed with exit code {process.ExitCode}: {stderr}");
+        }
+
+        var result = new byte[standardOutput.Length + standardError.Length];
+        Buffer.BlockCopy(standardOutput.GetBuffer(), 0, result, 0, (int)standardOutput.Length);
+        Buffer.BlockCopy(standardError.GetBuffer(), 0, result, (int)standardOutput.Length, (int)standardError.Length);
+        return result;
     }
 }

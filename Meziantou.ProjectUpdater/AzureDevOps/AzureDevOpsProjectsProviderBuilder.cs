@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-using CliWrap;
+using Meziantou.Framework;
 using Microsoft.TeamFoundation.SourceControl.WebApi;
 using Microsoft.VisualStudio.Services.Common;
 using Microsoft.VisualStudio.Services.WebApi;
@@ -110,12 +110,13 @@ public sealed class AzureDevOpsProjectsProviderBuilder
             try
             {
                 var sb = new StringBuilder();
-                await Cli.Wrap("az")
+                using var process = ProcessWrapper.Create("az")
                     .WithArguments(["account", "get-access-token", "--resource", "499b84ac-1321-427f-aa17-267ca6975798", "--query", "accessToken", "--output", "tsv"])
-                    .WithStandardOutputPipe(PipeTarget.ToStringBuilder(sb))
-                    .WithStandardErrorPipe(PipeTarget.ToStringBuilder(sb))
-                    .ExecuteAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                    .WithOutputStream(sb)
+                    .AddErrorStream(sb)
+                    .ExecuteAsync(cancellationToken);
+
+                await process;
 
                 token = sb.ToString().Trim(' ', '\r', '\n');
                 _personalAccessToken = token;
