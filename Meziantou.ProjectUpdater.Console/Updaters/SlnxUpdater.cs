@@ -1,4 +1,4 @@
-using CliWrap;
+using Meziantou.Framework;
 using Meziantou.ProjectUpdater;
 
 internal sealed class SlnxUpdater : IProjectUpdater
@@ -9,7 +9,7 @@ internal sealed class SlnxUpdater : IProjectUpdater
         var count = 0;
         foreach (var slnPath in repo.FindFile("**/*.sln"))
         {
-            await Cli.Wrap("dotnet")
+            await ProcessWrapper.Create("dotnet")
                 .WithArguments(["sln", slnPath, "migrate"])
                 .ExecuteAsync();
 

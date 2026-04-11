@@ -1,12 +1,16 @@
 using System.Diagnostics;
-using CliWrap;
 using Meziantou.Framework;
 using Microsoft.Extensions.Logging;
 
 namespace Meziantou.ProjectUpdater.Console.Updaters;
 internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
 {
-    private static readonly Lazy<Task> InstallTools = new(() => Cli.Wrap("dotnet").WithArguments(["tool", "update", "Meziantou.FileReferencer", "--global"]).ExecuteAsync());
+    private static readonly Lazy<Task> InstallTools = new(static async () =>
+    {
+        await ProcessWrapper.Create("dotnet")
+            .WithArguments(["tool", "update", "Meziantou.FileReferencer", "--global"])
+            .ExecuteAsync();
+    });
 
     public async ValueTask<ChangeDescription?> UpdateAsync(ProjectUpdaterContext context)
     {
@@ -22,9 +26,10 @@ internal sealed class ApplyRepositoryConfiguration : IProjectUpdater
         var path = ExecutableFinder.GetFullExecutablePath("Meziantou.FileReferencer");
         Debug.Assert(path is not null);
 
-        await Cli.Wrap(path).WithArguments(["--recurse", repo.RootPath])
-            .WithStandardOutputPipe(PipeTarget.ToDelegate(line => context.Logger.LogInformation("{StdOut}", line)))
-            .WithStandardErrorPipe(PipeTarget.ToDelegate(line => context.Logger.LogInformation("{StdErr}", line)))
+        await ProcessWrapper.Create(path)
+            .WithArguments(["--recurse", repo.RootPath])
+            .AddOutputStream(line => context.Logger.LogInformation("{StdOut}", line))
+            .AddErrorStream(line => context.Logger.LogInformation("{StdErr}", line))
             .ExecuteAsync();
 
         return new ChangeDescription("Apply repository configuration")

@@ -11,13 +11,13 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="CliWrap" Version="3.10.0" />
     <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.181">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Meziantou.Framework.Globbing" Version="2.0.2" />
     <PackageReference Include="Meziantou.Framework.Http" Version="1.0.5" />
+    <PackageReference Include="Meziantou.Framework.ProcessWrapper" Version="1.0.3" />
     <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.8" />
     <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.30" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />

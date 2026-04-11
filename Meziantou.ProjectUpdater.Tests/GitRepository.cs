@@ -1,5 +1,4 @@
 using System.Text;
-using CliWrap;
 using Meziantou.Framework;
 
 namespace Meziantou.ProjectUpdater.Tests;
@@ -81,29 +80,29 @@ internal sealed class GitRepository : IAsyncDisposable
 
     public async Task<byte[]> GetFileContent(string @ref, string path)
     {
-        using var ms = new MemoryStream();
         var args = GetCommandArguments(["show", @ref + ":" + path]);
-        var result = await Cli.Wrap("git")
-           .WithArguments(args)
-           .WithStandardOutputPipe(PipeTarget.ToStream(ms))
-           .WithStandardErrorPipe(PipeTarget.ToStream(ms))
-           .ExecuteAsync(_cancellationToken);
+        using var outputStream = new MemoryStream();
+        using var errorStream = new MemoryStream();
+        var result = await ProcessWrapper.Create("git")
+            .WithArguments(args)
+            .WithOutputStream([outputStream])
+            .WithErrorStream([errorStream])
+            .WithValidation(ProcessValidationMode.None)
+            .ExecuteAsync(_cancellationToken);
 
-        return ms.ToArray();
+        if (result.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"git exited with code {result.ExitCode}: {Encoding.UTF8.GetString(errorStream.ToArray())}");
+        }
+
+        return outputStream.ToArray();
     }
 
     public async Task<string> GetFileContentAsString(string @ref, string path, Encoding? encoding = null)
     {
-        using var ms = new MemoryStream();
-        var args = GetCommandArguments(["show", @ref + ":" + path]);
-        var result = await Cli.Wrap("git")
-           .WithArguments(args)
-           .WithStandardOutputPipe(PipeTarget.ToStream(ms))
-           .WithStandardErrorPipe(PipeTarget.ToStream(ms))
-           .ExecuteAsync(_cancellationToken);
-
-        ms.Seek(0, SeekOrigin.Begin);
-        using var sr = new StreamReader(ms, encoding);
+        var bytes = await GetFileContent(@ref, path);
+        using var ms = new MemoryStream(bytes);
+        using var sr = new StreamReader(ms, encoding ?? Encoding.UTF8);
         return sr.ReadToEnd();
     }
 
@@ -133,12 +132,17 @@ internal sealed class GitRepository : IAsyncDisposable
 
     private async Task<int> ExecuteGitCommand(IEnumerable<string?> arguments, bool checkExitCode)
     {
-        var result = await Cli.Wrap("git")
+        var command = ProcessWrapper.Create("git")
             .WithArguments(GetCommandArguments(arguments))
-            .WithStandardOutputPipe(PipeTarget.ToDelegate(_testOutputHelper.WriteLine))
-            .WithStandardErrorPipe(PipeTarget.ToDelegate(_testOutputHelper.WriteLine))
-            .WithValidation(checkExitCode ? CommandResultValidation.ZeroExitCode : CommandResultValidation.None)
-            .ExecuteAsync(_cancellationToken);
+            .AddOutputStream(_testOutputHelper.WriteLine)
+            .AddErrorStream(_testOutputHelper.WriteLine);
+
+        if (!checkExitCode)
+        {
+            command = command.WithValidation(ProcessValidationMode.None);
+        }
+
+        var result = await command.ExecuteAsync(_cancellationToken);
 
         return result.ExitCode;
     }
