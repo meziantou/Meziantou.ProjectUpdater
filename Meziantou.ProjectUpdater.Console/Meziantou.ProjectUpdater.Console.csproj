@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,12 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Meziantou.Framework" Version="5.0.9" />
-    <PackageReference Include="Meziantou.Framework.CommandLine" Version="3.0.8" />
-    <PackageReference Include="Meziantou.Framework.DependencyScanning" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
-    <PackageReference Include="NuGet.Protocol" Version="7.0.1" />
+    <PackageReference Include="Meziantou.Framework" Version="5.0.20" />
+    <PackageReference Include="Meziantou.Framework.CommandLine" Version="3.0.10" />
+    <PackageReference Include="Meziantou.Framework.DependencyScanning" Version="2.0.17" />
+    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.8" />
+    <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.8" />
   </ItemGroup>
 
   <ItemGroup>

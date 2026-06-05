@@ -15,13 +15,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Meziantou.Framework.Globbing" Version="2.0.2" />
-    <PackageReference Include="Meziantou.Framework.Http" Version="1.0.5" />
-    <PackageReference Include="Meziantou.Framework.ProcessWrapper" Version="1.0.3" />
+    <PackageReference Include="Meziantou.Framework.Globbing" Version="3.0.4" />
+    <PackageReference Include="Meziantou.Framework.Http" Version="1.0.7" />
+    <PackageReference Include="Meziantou.Framework.ProcessWrapper" Version="1.0.15" />
     <PackageReference Include="Meziantou.Framework.Slug" Version="1.0.8" />
-    <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="1.0.30" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
-    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="19.225.2" />
+    <PackageReference Include="Meziantou.Framework.TemporaryDirectory" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="20.256.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.8" />
   </ItemGroup>
 
 </Project>
